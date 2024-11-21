@@ -1,0 +1,47 @@
+.background {
+    background-color: #304c5c; /* Cor neutra de fundo, você pode alterar para outro tom se desejar */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100%;
+    width: 100%;
+    position: relative;
+    background-attachment: fixed; /* Mantém o fundo fixo */
+}
+
+.background::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: -1; /* Colocar atrás de todos os elementos */
+    pointer-events: none; /* Permite cliques nos elementos abaixo */
+}
+
+.itens-menu {
+    text-align: center;
+    word-spacing: 50px;
+    color: rgb(46, 35, 35);
+    font-variant: small-caps;
+    font-size: xx-large;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    z-index: 2;
+    position: relative;
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+a:hover {
+    color: rgb(30, 143, 39);
+    text-decoration: none;
+}

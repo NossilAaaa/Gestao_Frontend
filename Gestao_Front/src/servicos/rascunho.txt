@@ -1,0 +1,65 @@
+
+-----
+export const getDepartamentoAPI = async () => {
+    const response = await 
+        fetch(`${process.env.REACT_APP_ENDERECO_API}/departamentos`,
+            {
+                method : "GET",
+                headers : {
+                    "Content-Type" : "application/json"
+                }
+            }
+        );
+    const data = await response.json();
+    return data;
+}
+/*
+export const getDepartamentoPorCodigoAPI = async id => {
+    const response = await 
+        fetch(`${process.env.REACT_APP_ENDERECO_API}/departamentos/${id}`,
+            {
+                method : "GET",
+                headers : {
+                    "Content-Type" : "application/json"
+                }
+            }
+        );
+    const data = await response.json();
+    return data;
+}*/
+
+export const getDepartamentoPorCodigoAPI = async (id) => {
+    const resposta = await fetch(`${process.env.REACT_APP_ENDERECO_API}/departamentos/${id}`);
+    if (!resposta.ok) {
+        throw new Error("Erro ao obter o departamento");
+    }
+    return await resposta.json();
+};
+
+export const deleteDepartamentoPorCodigoAPI = async id => {
+    const response = await 
+        fetch(`${process.env.REACT_APP_ENDERECO_API}/departamentos/${id}`,
+            {
+                method : "DELETE",
+                headers : {
+                    "Content-Type" : "application/json"
+                }
+            }
+        );
+    const data = await response.json();
+    return data;
+}
+
+export const cadastraDepartamentoAPI = async (departamento) => {
+    const response = await fetch(`http://127.0.0.1:3002/departamentos/${departamento.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(departamento),
+    });
+    if (!response.ok) {
+      console.error('Erro ao atualizar o departamento:', response.statusText);
+    }
+  };
+  
