@@ -13,13 +13,18 @@ import Carregando from "../../comuns/Carregando";
 import {
     getDepartamentoAPI
 } from "../../../servicos/DepartamentoServico";
+import WithAuth from "../../../seguranca/WithAuth";
+import { useNavigate } from "react-router-dom";
 
 function Funcionario() {
+    
     const [alerta, setAlerta] = useState({ status: "", message: "" });
     const [listaFuncionarios, setListaFuncionarios] = useState([]);
     const [editar, setEditar] = useState(false);
     const [exibirForm, setExibirForm] = useState(false);
     const [carregando, setCarregando] = useState(false);
+    
+    let navigate = useNavigate();
     
     const [funcionario, setFuncionario] = useState({
         id: 0,
@@ -61,7 +66,7 @@ function Funcionario() {
                 setAlerta({ status: "error", message: "Funcionário não encontrado" });
             }
         } catch (error) {
-            console.error("Erro ao editar funcionário:", error);
+            navigate("/login", { replace: true });
         }
     };
 
@@ -86,7 +91,7 @@ function Funcionario() {
                 setExibirForm(false);
             }
         } catch (error) {
-            console.error("Erro ao cadastrar funcionário:", error);
+            navigate("/login", { replace: true });
         }
     };
 
@@ -137,7 +142,7 @@ function Funcionario() {
                 console.error("Estrutura de dados inesperada:", departamentos);
             }
         } catch (erro) {
-            console.error("Erro ao recuperar departamentos:", erro);
+            navigate("/login", { replace: true });
         }
     };
     
@@ -150,7 +155,7 @@ function Funcionario() {
                 setAlerta({ status: retornoAPI.status, message: retornoAPI.message });
                 recuperaFuncionarios(); // Atualizar lista após remoção
             } catch (error) {
-                console.error("Erro ao remover funcionário:", error);
+                navigate("/login", { replace: true });
             }
         }
     };
@@ -191,4 +196,4 @@ function Funcionario() {
     );
 }
 
-export default Funcionario;
+export default WithAuth(Funcionario);

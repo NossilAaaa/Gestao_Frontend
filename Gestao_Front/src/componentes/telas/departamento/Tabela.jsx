@@ -11,18 +11,27 @@ function Tabela() {
     // Busca os departamentos na API ao carregar o componente
     useEffect(() => {
         const apiUrl = process.env.REACT_APP_ENDERECO_API + '/departamentos';
-
+    
         fetch(apiUrl)
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro na resposta da API: ' + response.statusText);
+                }
+                return response.json();
+            })
             .then(data => {
-                setListaDepartamentos(data.departamentos);
-                setCarregando(false);  // Atualiza o estado de carregamento
+                console.log(data); // Inspecione o formato da resposta
+                setListaDepartamentos(data.departamentos); // Evite erros
             })
             .catch(error => {
                 console.error('Erro ao carregar os departamentos:', error);
-                setCarregando(false);  // Mesmo em erro, o carregamento é finalizado
+                alert('Erro ao carregar os departamentos. Tente novamente mais tarde.');
+            })
+            .finally(() => {
+                setCarregando(false);
             });
-    }, []);  // A lista de departamentos é carregada uma vez após a montagem do componente
+    }, []);
+      // A lista de departamentos é carregada uma vez após a montagem do componente
 
     return (
         <div style={{ padding: '20px' }} className="tabela">

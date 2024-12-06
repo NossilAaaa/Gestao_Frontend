@@ -8,6 +8,8 @@ import Formulario from "./Formulario";
 import Carregando from "../../comuns/Carregando";
 import '../Home.css';
 import DepartamentoContext from "./DepartamentoContext";
+import WithAuth from "../../../seguranca/WithAuth";
+import { useNavigate } from "react-router-dom";
 
 function Departamento() {
     const [alerta, setAlerta] = useState({ status: "", message: "" });
@@ -17,13 +19,20 @@ function Departamento() {
     const [departamento, setDepartamento] = useState({ id: null, nome: '', localizacao: '' });
     const [carregando, setCarregando] = useState(false);  // Estado de carregamento
 
+    let navigate = useNavigate();
+
     // Função para iniciar novo departamento
     const novoDepartamento = () => {
-        console.log('Iniciando novo departamento...');
-        setEditar(false);
-        setAlerta({ status: "", message: "" });
-        setDepartamento({ id: null, nome: '', localizacao: '' }); // Limpar id ao criar novo
-        setExibirForm(true);
+        try{
+            console.log('Iniciando novo departamento...');
+            setEditar(false);
+            setAlerta({ status: "", message: "" });
+            setDepartamento({ id: null, nome: '', localizacao: '' }); // Limpar id ao criar novo
+            setExibirForm(true);
+        } catch (err){
+            navigate("/login", { replace: true });
+        }
+        
     };
     
     // Função para editar departamento
@@ -37,7 +46,7 @@ function Departamento() {
             setEditar(true);
             setExibirForm(true);
         } catch (erro) {
-            console.error("Erro ao buscar o departamento para edição:", erro);
+            navigate("/login", { replace: true });
             setAlerta({ status: "error", message: "Erro ao carregar o departamento" });
         } finally {
             setCarregando(false);  // Finaliza o carregamento
@@ -65,7 +74,7 @@ function Departamento() {
             recuperaDepartamentos();
             setExibirForm(false);
         } catch (err) {
-            console.error("Erro ao salvar departamento:", err);
+            navigate("/login", { replace: true });
             setAlerta({ status: "error", message: "Erro ao salvar o departamento" });
         } finally {
             setCarregando(false);  // Finaliza o carregamento
@@ -89,7 +98,7 @@ function Departamento() {
             console.log('Departamentos recuperados:', departamentos);
             setListaDepartamentos(departamentos.departamentos);
         } catch (erro) {
-            console.error("Erro ao recuperar departamentos:", erro);
+            navigate("/login", { replace: true });
             setAlerta({ status: "error", message: "Erro ao carregar departamentos" });
         } finally {
             setCarregando(false);  // Finaliza o carregamento
@@ -105,7 +114,7 @@ function Departamento() {
                 setAlerta({ status: retornoAPI.status, message: retornoAPI.message });
                 recuperaDepartamentos();
             } catch (erro) {
-                console.error("Erro ao remover departamento:", erro);
+                navigate("/login", { replace: true });
                 setAlerta({ status: "error", message: "Erro ao remover o departamento" });
             }
         }
@@ -141,4 +150,4 @@ function Departamento() {
     );
 }
 
-export default Departamento;
+export default WithAuth(Departamento);

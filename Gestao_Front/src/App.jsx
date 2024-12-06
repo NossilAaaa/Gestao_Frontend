@@ -7,23 +7,41 @@ import Menu from './componentes/Menu';
 import Home from './componentes/telas/Home';
 import Departamento from './componentes/telas/departamento/Departamento'
 import Funcionario from './componentes/telas/funcionario/Funcionario';
+import Login from './componentes/telas/login/Login';
+import MenuPublico from './componentes/MenuPublico';
+import MenuPrivado from './componentes/MenuPrivado';
+
 const router = createBrowserRouter([
   {
     path: "/",
-    element : <Menu/>,
+    element : <MenuPublico/>,
     children : [
       {
         index : true,
         element : <Home/>
       },
       {
-        path : "/departamentos",
+        path : "login",
+        element :  <Login/>
+      }         
+    ]
+  },
+  {
+    path: "/privado",
+    element: <MenuPrivado />,
+    children:[
+      {
+        index : true,
+        element : <Home/>
+      },
+      {
+        path : "departamentos",
         element : <Departamento/>
       },
       {
-        path : "/funcionarios",
+        path : "funcionarios",
         element : <Funcionario/>
-      }       
+      }
     ]
   }
 ])

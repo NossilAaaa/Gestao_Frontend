@@ -1,11 +1,13 @@
-// Função para obter todos os departamentos
+import { getToken } from '../seguranca/Autenticacao';
+
 export const getDepartamentoAPI = async () => {
     const response = await 
         fetch(`${process.env.REACT_APP_ENDERECO_API}/departamentos`,
             {
                 method : "GET",
                 headers : {
-                    "Content-Type" : "application/json"
+                    "Content-Type" : "application/json",
+                    "authorization": getToken()
                 }
             }
         );
@@ -40,7 +42,8 @@ export const deleteDepartamentoPorCodigoAPI = async (id) => {
         const response = await fetch(`${process.env.REACT_APP_ENDERECO_API}/departamentos/${id}`, {
             method: 'DELETE',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                "authorization": getToken()
             }
         });
 
@@ -63,7 +66,8 @@ export const cadastraDepartamentoAPI = async (departamento, metodo) => {
         const response = await fetch(`${process.env.REACT_APP_ENDERECO_API}/departamentos`, {
             method: metodo,
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                "authorization": getToken()
             },
             body: JSON.stringify(departamento)
         });

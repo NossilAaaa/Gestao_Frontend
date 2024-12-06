@@ -1,5 +1,21 @@
 const baseUrl = process.env.REACT_APP_ENDERECO_API;
 
+import { getToken } from '../seguranca/Autenticacao';
+
+export const getFuncionarioServico = async () => {
+    const response = 
+    await fetch(`${process.env.REACT_APP_ENDERECO_API}/categoria`,
+    {
+        method : "GET",
+        headers : {
+            "Content-Type" : "application/json",
+            "authorization": getToken()
+        }
+    });
+    const data = await response.json();
+    return data;
+}
+
 // Função para tratamento de resposta
 const handleResponse = async (response) => {
     if (!response.ok) {
@@ -19,7 +35,8 @@ export const getFuncionarioAPI = async () => {
         const response = await fetch(`${baseUrl}/funcionarios`, {
             method: "GET",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "authorization": getToken()
             }
         });
         return await handleResponse(response);
@@ -35,7 +52,8 @@ export const getFuncionarioPorCodigoAPI = async (id) => {
         const response = await fetch(`${baseUrl}/funcionarios/${id}`, {
             method: "GET",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "authorization": getToken()
             }
         });
         return await handleResponse(response);
@@ -51,7 +69,8 @@ export const deleteFuncionarioPorCodigoAPI = async (id) => {
         const response = await fetch(`${baseUrl}/funcionarios/${id}`, {
             method: "DELETE",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "authorization": getToken()
             }
         });
         if (response.status === 204) {
@@ -70,7 +89,8 @@ export const cadastraFuncionarioAPI = async (objeto, metodo) => {
         const response = await fetch(`${baseUrl}/funcionarios`, {
             method: metodo,
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "authorization": getToken()
             },
             body: JSON.stringify(objeto)
         });
