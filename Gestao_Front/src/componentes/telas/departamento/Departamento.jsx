@@ -5,7 +5,6 @@ import {
 } from "../../../servicos/DepartamentoServico";
 import Tabela from "./Tabela";
 import Formulario from "./Formulario";
-import Carregando from "../../comuns/Carregando";
 import '../Home.css';
 import DepartamentoContext from "./DepartamentoContext";
 import WithAuth from "../../../seguranca/WithAuth";
@@ -17,39 +16,33 @@ function Departamento() {
     const [editar, setEditar] = useState(false);
     const [exibirForm, setExibirForm] = useState(false);
     const [departamento, setDepartamento] = useState({ id: null, nome: '', localizacao: '' });
-    const [carregando, setCarregando] = useState(false);  // Estado de carregamento
+    const [carregando, setCarregando] = useState(true); // Inicia como carregando
 
     let navigate = useNavigate();
 
     // Função para iniciar novo departamento
     const novoDepartamento = () => {
-        try{
-            console.log('Iniciando novo departamento...');
-            setEditar(false);
-            setAlerta({ status: "", message: "" });
-            setDepartamento({ id: null, nome: '', localizacao: '' }); // Limpar id ao criar novo
-            setExibirForm(true);
-        } catch (err){
-            navigate("/login", { replace: true });
-        }
-        
+        console.log('Iniciando novo departamento...');
+        setEditar(false);
+        setAlerta({ status: "", message: "" });
+        setDepartamento({ id: null, nome: '', localizacao: '' });
+        setExibirForm(true);
     };
-    
+
     // Função para editar departamento
     const editarDepartamento = async (id) => {
         console.log(`Editando departamento com id: ${id}`);
         try {
-            setCarregando(true);  // Inicia o carregamento
+            setCarregando(true);
             const dados = await getDepartamentoPorCodigoAPI(id);
-            console.log('Departamento encontrado:', dados);
-            setDepartamento(dados); 
+            setDepartamento(dados);
             setEditar(true);
             setExibirForm(true);
         } catch (erro) {
             navigate("/login", { replace: true });
             setAlerta({ status: "error", message: "Erro ao carregar o departamento" });
         } finally {
-            setCarregando(false);  // Finaliza o carregamento
+            setCarregando(false);
         }
     };
 
@@ -59,58 +52,49 @@ function Departamento() {
         const metodo = editar ? "PUT" : "POST";
         try {
             console.log('Salvando departamento...');
-            setCarregando(true);  // Inicia o carregamento
+            setCarregando(true);
 
             const retornoAPI = await cadastraDepartamentoAPI(departamento, metodo);
-            console.log('Resposta da API:', retornoAPI);
             setAlerta({ status: retornoAPI.status, message: retornoAPI.message });
 
-            // Se for uma edição, setar editar para false após o sucesso
             if (editar) {
                 setEditar(false);
             }
 
-            // Recupera a lista de departamentos atualizada
-            recuperaDepartamentos();
+            recuperaDepartamentos(); // Atualiza a lista
             setExibirForm(false);
         } catch (err) {
             navigate("/login", { replace: true });
             setAlerta({ status: "error", message: "Erro ao salvar o departamento" });
         } finally {
-            setCarregando(false);  // Finaliza o carregamento
+            setCarregando(false);
         }
     };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        console.log(`Mudança no campo: ${name} com valor: ${value}`);
-        setDepartamento({
-            ...departamento,
-            [name]: value || ''  // Garantir que o valor nunca seja null ou undefined
-        });
+        setDepartamento({ ...departamento, [name]: value || '' });
     };
 
     const recuperaDepartamentos = async () => {
         console.log('Recuperando lista de departamentos...');
-        setCarregando(true);  // Inicia o carregamento
         try {
+            setCarregando(true);
             const departamentos = await getDepartamentoAPI();
-            console.log('Departamentos recuperados:', departamentos);
-            setListaDepartamentos(departamentos.departamentos);
+            setListaDepartamentos(departamentos);
         } catch (erro) {
             navigate("/login", { replace: true });
             setAlerta({ status: "error", message: "Erro ao carregar departamentos" });
         } finally {
-            setCarregando(false);  // Finaliza o carregamento
+            setCarregando(false);
         }
-    }
+    };
 
     const remover = async (id) => {
         console.log(`Removendo departamento com id: ${id}`);
         if (window.confirm('Deseja remover este departamento?')) {
             try {
                 const retornoAPI = await deleteDepartamentoPorCodigoAPI(id);
-                console.log('Resposta da API ao remover:', retornoAPI);
                 setAlerta({ status: retornoAPI.status, message: retornoAPI.message });
                 recuperaDepartamentos();
             } catch (erro) {
@@ -119,32 +103,31 @@ function Departamento() {
             }
         }
     };
-/*
+
     useEffect(() => {
-        console.log('Componente montado, recuperando departamentos...');
-        recuperaDepartamentos(); 
+        recuperaDepartamentos();
     }, []);
-*/
+
     return (
         <div className="departamento">
             <DepartamentoContext.Provider value={{
                 alerta,
-                listaDepartamentos,
                 remover,
                 departamento,
                 editarDepartamento,
                 novoDepartamento,
-                acaoCadastrar,  
+                acaoCadastrar,
                 handleChange,
                 exibirForm,
                 setExibirForm
             }}>
                 <div className="tabela-container">
-                    <Carregando carregando={carregando}>  {/* Carregamento condicional */}
-                        <Tabela />
-                    </Carregando>
+                    <Tabela
+                        listaDepartamentos={listaDepartamentos}
+                        carregando={carregando}
+                    />
                 </div>
-                <Formulario />
+                {exibirForm && <Formulario />}
             </DepartamentoContext.Provider>
         </div>
     );

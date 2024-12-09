@@ -15,11 +15,16 @@ export const getDepartamentoAPI = async () => {
     return data;
 }
 
-// Função para obter um departamento por ID
 export const getDepartamentoPorCodigoAPI = async (id) => {
     console.log(`Buscando departamento com ID: ${id}`);
     try {
-        const response = await fetch(`${process.env.REACT_APP_ENDERECO_API}/departamentos/${id}`);
+        const response = await fetch(`${process.env.REACT_APP_ENDERECO_API}/departamentos/${id}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "authorization": getToken()
+            }
+        });
 
         if (!response.ok) {
             console.error(`Erro ao obter departamento com ID ${id}: ${response.statusText}`);
@@ -33,7 +38,8 @@ export const getDepartamentoPorCodigoAPI = async (id) => {
         console.error(`Erro ao recuperar o departamento com ID ${id}:`, error);
         throw error;
     }
-}
+};
+
 
 // Função para deletar um departamento por ID
 export const deleteDepartamentoPorCodigoAPI = async (id) => {
